@@ -54,6 +54,7 @@ func main() {
 	}
 
 	bot.Debug = flags()
+	stamp()
 	log.Printf("[Telegram-Bot] Authorized on account %s", bot.Self.UserName)
 
 	rpc.Ping()
