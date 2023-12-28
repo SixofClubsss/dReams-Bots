@@ -2,22 +2,26 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
-	"github.com/SixofClubsss/dReams/menu"
-	"github.com/SixofClubsss/dReams/rpc"
-	"github.com/civilware/Gnomon/indexer"
+	"github.com/SixofClubsss/dPrediction/prediction"
+	"github.com/civilware/Gnomon/structures"
+	"github.com/dReam-dApps/dReams/gnomes"
+	"github.com/dReam-dApps/dReams/rpc"
+	"github.com/sirupsen/logrus"
 )
 
+var gnomon = gnomes.NewGnomes()
+var logger = structures.Logger.WithFields(logrus.Fields{})
+
 func searchFilters() (filter []string) {
-	predict, _ := rpc.GetPredictCode(rpc.Signal.Daemon, 0)
+	predict := prediction.GetPredictCode(0)
 	if predict != "" {
 		filter = append(filter, predict)
 	}
 
-	sports, _ := rpc.GetSportsCode(rpc.Signal.Daemon, 0)
+	sports := prediction.GetSportsCode(0)
 	if sports != "" {
 		filter = append(filter, sports)
 	}
@@ -25,60 +29,30 @@ func searchFilters() (filter []string) {
 	return
 }
 
-func startGnomon() {
-	log.Println("[Telegram-Bot] Starting Gnomon")
-	backend := menu.GnomonDB()
-
-	last_height := backend.GetLastIndexHeight()
-	daemon_endpoint := rpc.Round.Daemon
-	runmode := "daemon"
-	mbl := false
-	closeondisconnect := false
-	filter := searchFilters()
-
-	if len(filter) == 2 {
-		menu.Gnomes.Indexer = indexer.NewIndexer(backend, filter, last_height, daemon_endpoint, runmode, mbl, closeondisconnect, menu.Gnomes.Fast)
-		go menu.Gnomes.Indexer.StartDaemonMode(menu.Gnomes.Para)
-		time.Sleep(3 * time.Second)
-		menu.Gnomes.Init = true
-		menu.Gnomes.Sync = true
-	}
-}
-
-func StopGnomon(gi bool) {
-	if gi && !menu.GnomonClosing() {
-		log.Println("[Telegram-Bot] Putting Gnomon to Sleep")
-		menu.Gnomes.Indexer.Close()
-		menu.Gnomes.Init = false
-		time.Sleep(1 * time.Second)
-		log.Println("[Telegram-Bot] Gnomon is Sleeping")
-	}
-}
-
-func GetBook(dc bool, scid string) (text string) {
-	if dc && !menu.GnomonClosing() && !menu.GnomonWriting() {
-		_, initValue := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_init", menu.Gnomes.Indexer.ChainHeight, true)
+func GetBook(scid string) (text string) {
+	if rpc.Daemon.IsConnected() && !gnomon.IsClosing() && !gnomon.IsWriting() {
+		_, initValue := gnomon.GetSCIDValuesByKey(scid, "s_init")
 		if initValue != nil {
 			init := initValue[0]
 			var single bool
 			iv := 1
 			for {
-				_, s_init := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_init_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
+				_, s_init := gnomon.GetSCIDValuesByKey(scid, "s_init_"+strconv.Itoa(iv))
 				if s_init != nil {
-					game, _ := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "game_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					league, _ := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "league_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					//_, s_n := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_#_", menu.Gnomes.Indexer.ChainHeight, true)
-					_, s_amt := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_amount_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					_, s_end := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_end_at_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					_, s_total := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_total_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					//s_urlValue, _ := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "s_url_", menu.Gnomes.Indexer.ChainHeight, true)
-					_, s_ta := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "team_a_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					_, s_tb := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "team_b_"+strconv.Itoa(iv), menu.Gnomes.Indexer.ChainHeight, true)
-					//_, time_a := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "time_a", menu.Gnomes.Indexer.ChainHeight, true)
-					// _, time_b := menu.Gnomes.Indexer.Backend.GetSCIDValuesByKey(scid, "time_b", menu.Gnomes.Indexer.ChainHeight, true)
+					game, _ := gnomon.GetSCIDValuesByKey(scid, "game_"+strconv.Itoa(iv))
+					league, _ := gnomon.GetSCIDValuesByKey(scid, "league_"+strconv.Itoa(iv))
+					//_, s_n := gnomon.GetSCIDValuesByKey(scid, "s_#_")
+					_, s_amt := gnomon.GetSCIDValuesByKey(scid, "s_amount_"+strconv.Itoa(iv))
+					_, s_end := gnomon.GetSCIDValuesByKey(scid, "s_end_at_"+strconv.Itoa(iv))
+					_, s_total := gnomon.GetSCIDValuesByKey(scid, "s_total_"+strconv.Itoa(iv))
+					//s_urlValue, _ := gnomon.GetSCIDValuesByKey(scid, "s_url_")
+					_, s_ta := gnomon.GetSCIDValuesByKey(scid, "team_a_"+strconv.Itoa(iv))
+					_, s_tb := gnomon.GetSCIDValuesByKey(scid, "team_b_"+strconv.Itoa(iv))
+					//_, time_a := gnomon.GetSCIDValuesByKey(scid, "time_a")
+					// _, time_b := gnomon.GetSCIDValuesByKey(scid, "time_b")
 
-					team_a := menu.TrimTeamA(game[0])
-					team_b := menu.TrimTeamB(game[0])
+					team_a := prediction.TrimTeamA(game[0])
+					team_b := prediction.TrimTeamB(game[0])
 
 					eA := time.Unix(int64(s_end[0]), 0).UTC()
 					closes := fmt.Sprint(eA.Format("2006-01-02 15:04:05 UTC"))

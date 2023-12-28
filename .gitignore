@@ -1,2 +1,3 @@
 gnomondb\\*
-configs.json
+gnomondb*
+config.json
