@@ -3,7 +3,7 @@
 
 ### Configure
 Create a Telegram bot with the [BotFather](https://core.telegram.org/bots/tutorial).
-Make `configs.json` file.
+Make `config.json` file.
 ```
 {
  "bot_api": "https://api.telegram.org/bot",
@@ -35,6 +35,6 @@ Install latest [Go](https://go.dev/doc/install) version.
 git clone https://github.com/SixofClubsss/dReams-Bots.git
 cd dReams-Bots
 go mod tidy
-cd telegram
+cd bookie
 go run .
 ```
