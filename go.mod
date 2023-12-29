@@ -1,6 +1,6 @@
 module github.com/SixofClubsss/dReams-Bots
 
-go 1.19
+go 1.20
 
 require (
 	github.com/SixofClubsss/Grokked v0.1.0
