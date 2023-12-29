@@ -158,7 +158,6 @@ func main() {
 			} else if m == "/dero_onchain" || m == "/dero_onchain@dReamsBookieBot" {
 				prediction.Predict.Contract.SCID = onChain_contract
 				text := prediction.GetPrediction(prediction.Predict.Contract.SCID)
-				fmt.Println(text)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatPrediction(text))
 
 			} else if m == "/help" || m == "/help@dReamsBookieBot" {
