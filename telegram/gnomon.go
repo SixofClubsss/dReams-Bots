@@ -30,7 +30,7 @@ func searchFilters() (filter []string) {
 }
 
 func GetBook(scid string) (text string) {
-	if rpc.Daemon.IsConnected() && !gnomon.IsClosing() && !gnomon.IsWriting() {
+	if rpc.Daemon.IsConnected() && !gnomon.IsClosing() {
 		_, initValue := gnomon.GetSCIDValuesByKey(scid, "s_init")
 		if initValue != nil {
 			init := initValue[0]

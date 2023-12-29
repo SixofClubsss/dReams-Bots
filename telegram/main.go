@@ -48,7 +48,7 @@ Powered by <a href="http://github.com/civilware/Gnomon">Gnomon</a>`
 	hockey_contract     = "c6a7f69ff3f1101a19678b4c28ae5b711c9acc291045049276671493b873dbaa"
 	mma_contract        = "faf28fe214271b736f458492295b290b07ae678500f7696419eb02b5969c30b1"
 
-	btcUSDT_contract  = "c89c2f514300413fd6922c28591196a7c48b42b07e7f4d7d8d9f7643e253a6ff"
+	btcUSDT_contract  = "8a6601afda0d6882bb64bcbbc4848eee474ba9ef0d285469c47415bf4ad469bd"
 	deroUSDT_contract = "eaa62b220fa1c411785f43c0c08ec59c761261cb58a0ccedc5b358e5ed2d2c95"
 	xmrUSDT_contract  = "db96462400e44fc424c8072b7f328853ed124a8347b7fea8874892a2a58946db"
 	onChain_contract  = "a56a89dcbad340b010e028b3b9ff905abaa411c5df60d1ffa8f82f7a9cde6df9"
@@ -68,7 +68,7 @@ func main() {
 	}
 
 	// Parse start flags
-	bot.Debug = common.Flags()
+	common.Flags()
 	logger.Printf("[%s] Authorized on account %s\n", bot_name, bot.Self.UserName)
 
 	// Handle ctrl+c close
@@ -76,11 +76,15 @@ func main() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		<-c
+		common.Close()
 		fmt.Println("")
 		gnomon.Stop(bot_name)
 		logger.Printf("[%s] Exiting\n", bot_name)
 		os.Exit(0)
 	}()
+
+	// Ping daemon for connection
+	rpc.Ping()
 
 	// Start Gnomon
 	gnomes.StartGnomon(bot_name, gnomon.DBStorageType(), searchFilters(), 0, 0, nil)
@@ -90,8 +94,7 @@ func main() {
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
 
-	// Ping daemon and start checkConnection loop
-	rpc.Ping()
+	// Start daemon CheckConnection loop
 	go common.CheckConnection(bot_name)
 
 	// Watch for updates from telegram
@@ -102,63 +105,63 @@ func main() {
 			logger.Printf("[%s] [%s] %s\n", bot_name, update.Message.From.UserName, update.Message.Text)
 			m := update.Message.Text
 
-			if m == "/epl_games" || m == "/epl_games@dReamTables_bot" {
+			if m == "/epl_games" || m == "/epl_games@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, GetBook(soccer_contract))
 
-			} else if m == "/nba_games" || m == "/nba_games@dReamTables_bot" {
+			} else if m == "/nba_games" || m == "/nba_games@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, GetBook(basketball_contract))
 
-			} else if m == "/nfl_games" || m == "/nfl_games@dReamTables_bot" {
+			} else if m == "/nfl_games" || m == "/nfl_games@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, GetBook(football_contract))
 
-			} else if m == "/nhl_games" || m == "/nhl_games@dReamTables_bot" {
+			} else if m == "/nhl_games" || m == "/nhl_games@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, GetBook(hockey_contract))
 
-			} else if m == "/mma_fights" || m == "/mma_fights@dReamTables_bot" {
+			} else if m == "/mma_fights" || m == "/mma_fights@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, GetBook(mma_contract))
 
-			} else if m == "/epl_finals" || m == "/epl_finals@dReamTables_bot" {
+			} else if m == "/epl_finals" || m == "/epl_finals@dReamsBookieBot" {
 				finals := prediction.FetchSportsFinal(soccer_contract)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatFinals(finals))
 
-			} else if m == "/nba_finals" || m == "/nba_finals@dReamTables_bot" {
+			} else if m == "/nba_finals" || m == "/nba_finals@dReamsBookieBot" {
 				finals := prediction.FetchSportsFinal(basketball_contract)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatFinals(finals))
 
-			} else if m == "/nfl_finals" || m == "/nfl_finals@dReamTables_bot" {
+			} else if m == "/nfl_finals" || m == "/nfl_finals@dReamsBookieBot" {
 				finals := prediction.FetchSportsFinal(football_contract)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatFinals(finals))
 
-			} else if m == "/nhl_finals" || m == "/nhl_finals@dReamTables_bot" {
+			} else if m == "/nhl_finals" || m == "/nhl_finals@dReamsBookieBot" {
 				finals := prediction.FetchSportsFinal(hockey_contract)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatFinals(finals))
 
-			} else if m == "/mma_finals" || m == "/mma_finals@dReamTables_bot" {
+			} else if m == "/mma_finals" || m == "/mma_finals@dReamsBookieBot" {
 				finals := prediction.FetchSportsFinal(mma_contract)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatFinals(finals))
 
-			} else if m == "/btc_usdt" || m == "/btc@dReamTables_bot" {
+			} else if m == "/btc_usdt" || m == "/btc_usdt@dReamsBookieBot" {
 				prediction.Predict.Contract.SCID = btcUSDT_contract
 				text := prediction.GetPrediction(prediction.Predict.Contract.SCID)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatPrediction(text))
 
-			} else if m == "/dero_usdt" || m == "/dero@dReamTables_bot" {
+			} else if m == "/dero_usdt" || m == "/dero_usdt@dReamsBookieBot" {
 				prediction.Predict.Contract.SCID = deroUSDT_contract
 				text := prediction.GetPrediction(prediction.Predict.Contract.SCID)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatPrediction(text))
 
-			} else if m == "/xmr_usdt" || m == "/xmr@dReamTables_bot" {
+			} else if m == "/xmr_usdt" || m == "/xmr_usdt@dReamsBookieBot" {
 				prediction.Predict.Contract.SCID = xmrUSDT_contract
 				text := prediction.GetPrediction(prediction.Predict.Contract.SCID)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatPrediction(text))
 
-			} else if m == "/dero_onchain" || m == "/dero_onchain@dReamTables_bot" {
+			} else if m == "/dero_onchain" || m == "/dero_onchain@dReamsBookieBot" {
 				prediction.Predict.Contract.SCID = onChain_contract
 				text := prediction.GetPrediction(prediction.Predict.Contract.SCID)
 				fmt.Println(text)
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, formatPrediction(text))
 
-			} else if m == "/help" || m == "/help@dReamTables_bot" {
+			} else if m == "/help" || m == "/help@dReamsBookieBot" {
 				msg = tgbotapi.NewMessage(update.Message.Chat.ID, help)
 				msg.DisableWebPagePreview = true
 			}
