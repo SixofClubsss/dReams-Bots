@@ -15,18 +15,19 @@ import (
 )
 
 type config struct {
-	BotAPI        string `json:"bot_api"`
-	APIKey        string `json:"api_key"`
-	Daemon        string `json:"daemon_address"`
+	BotAPI        string `json:"botApi"`
+	APIKey        string `json:"apiKey"`
+	Daemon        string `json:"daemon"`
 	SCID          string `json:"scid"`
+	ChatID        int64  `json:"chatID"`
 	UpdateConfigs struct {
 		Limit      int `json:"limit"`
 		Timeout    int `json:"timeout"`
-		UpdateFreq int `json:"update_freq"`
-	} `json:"update_configs"`
+		UpdateFreq int `json:"updateFreq"`
+	} `json:"updateConfigs"`
 	Webhook      bool        `json:"webhook"`
-	LogFile      string      `json:"log_file"`
-	BlockedUsers interface{} `json:"blocked_users"`
+	LogFile      string      `json:"logFile"`
+	BlockedUsers interface{} `json:"blockedUsers"`
 }
 
 var gnomon = gnomes.NewGnomes()

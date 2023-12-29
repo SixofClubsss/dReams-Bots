@@ -6,17 +6,18 @@ Create a Telegram bot with the [BotFather](https://core.telegram.org/bots/tutori
 Make `config.json` file.
 ```
 {
- "bot_api": "https://api.telegram.org/bot",
- "api_key": "TELEGRAM-BOT-TOKEN-HERE",
- "daemon_address": "127.0.0.1:10102",
- "update_configs": {
+ "botApi": "https://api.telegram.org/bot",
+ "apiKey": "TELEGRAM-BOT-TOKEN-HERE",
+ "daemon": "127.0.0.1:10102",
+ "chatID": yourGroupChatID#,
+ "updateConfigs": {
   "limit": 100,
   "timeout": 0,
-  "update_freq": 300000000
+  "updateFreq": 300000000
  },
  "webhook": false,
- "log_file": "STDOUT",
- "blocked_users": null
+ "logFile": "STDOUT",
+ "blockedUsers": null
 }
 ```
 

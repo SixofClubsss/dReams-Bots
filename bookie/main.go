@@ -100,7 +100,7 @@ func main() {
 	// Watch for updates from telegram
 	for update := range updates {
 		// If we got a message
-		if update.Message != nil && update.Message.Chat.ID == -1001775380893 {
+		if update.Message != nil && update.Message.Chat.ID == config.ChatID {
 			var msg tgbotapi.MessageConfig
 			logger.Printf("[%s] [%s] %s\n", bot_name, update.Message.From.UserName, update.Message.Text)
 			m := update.Message.Text
@@ -167,7 +167,9 @@ func main() {
 
 			msg.ParseMode = "HTML"
 			msg.ReplyToMessageID = update.Message.MessageID
-			bot.Send(msg)
+			if msg.Text != "" {
+				bot.Send(msg)
+			}
 		}
 	}
 }
