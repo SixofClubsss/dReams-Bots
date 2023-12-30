@@ -51,8 +51,8 @@ github.com/BurntSushi/toml v1.1.0/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbi
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/SixofClubsss/Grokked v0.1.0 h1:yeN4V3hE95196M7ndtodp7unPw2BwX4Dax5KmbY6RsY=
-github.com/SixofClubsss/Grokked v0.1.0/go.mod h1:DN/XmyhtWaTIVIHLpi81nhroJ4Yxf/qK+b/HkfFqKWY=
+github.com/SixofClubsss/Grokked v0.1.1-0.20231230032951-30d9cab9ca90 h1:lYP90qOVCX/rHnsyrX38dvc8a4XQlhigyUkW9NunhkI=
+github.com/SixofClubsss/Grokked v0.1.1-0.20231230032951-30d9cab9ca90/go.mod h1:DN/XmyhtWaTIVIHLpi81nhroJ4Yxf/qK+b/HkfFqKWY=
 github.com/SixofClubsss/Holdero v0.3.0 h1:X/4GXQHRa5bmxUFFtbnjQcQl4vRSDJKkC7oPKyZxrDk=
 github.com/SixofClubsss/Holdero v0.3.0/go.mod h1:RXAOPOOZGgZLrTmRWdlAa3wLDZhg5qJ6CwfHJ8hmtgU=
 github.com/SixofClubsss/dPrediction v0.3.0 h1:4k7avvDbiMptVA5kZtEh3M3xoVjUWe7Zq0t7ak/0Szk=

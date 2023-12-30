@@ -3,7 +3,7 @@ module github.com/SixofClubsss/dReams-Bots
 go 1.20
 
 require (
-	github.com/SixofClubsss/Grokked v0.1.0
+	github.com/SixofClubsss/Grokked v0.1.1-0.20231230032951-30d9cab9ca90
 	github.com/SixofClubsss/dPrediction v0.3.0
 	github.com/civilware/Gnomon v0.0.0-20231218151558-0ee387e75195
 	github.com/dReam-dApps/dReams v0.11.0
