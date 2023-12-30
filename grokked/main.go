@@ -47,7 +47,7 @@ func main() {
 	for {
 		select {
 		case update := <-updates:
-			if update.Message != nil {
+			if update.Message != nil && update.Message.Chat.ID == config.ChatID {
 				var msg tgbotapi.MessageConfig
 				logger.Printf("[%s] [%s] %s\n", bot_name, update.Message.From.UserName, update.Message.Text)
 				if update.Message.Time().Unix() < time.Now().Unix()-30 {
